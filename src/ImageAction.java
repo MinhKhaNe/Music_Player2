@@ -5,7 +5,7 @@ import java.awt.geom.AffineTransform;
 class ImageAction extends JLabel {
     private Image image;
     private int panelWidth, panelHeight;
-    private double angle = 0; // Góc xoay
+    private double angle = 0; 
     private Timer timer;
 
     public ImageAction(Image image, int panelWidth, int panelHeight) {
@@ -13,9 +13,8 @@ class ImageAction extends JLabel {
         this.panelWidth = panelWidth;
         this.panelHeight = panelHeight;
 
-        // Tạo Timer để xoay ảnh
         timer = new Timer(16, e -> {
-            angle += Math.toRadians(1); // Tăng góc mỗi lần
+            angle += Math.toRadians(1); 
             repaint();
         });
         timer.start();
@@ -26,11 +25,9 @@ class ImageAction extends JLabel {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        // Tạo tâm để xoay
         int centerX = panelWidth / 2;
         int centerY = panelHeight / 2;
 
-        // Xoay ảnh
         AffineTransform transform = new AffineTransform();
         transform.translate(centerX, centerY);
         transform.rotate(angle);
@@ -38,5 +35,3 @@ class ImageAction extends JLabel {
         g2d.drawImage(image, transform, null);
     }
 }
-
-
