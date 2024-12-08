@@ -292,7 +292,7 @@ public class MusicPlayerGUI extends JFrame {
         remove(songImage); // Loại bỏ hình ảnh cũ
 
         // Tải ảnh mới
-        ImageIcon icon = new ImageIcon("src/assets/" + song.getSongTitle() + ".png");
+        ImageIcon icon = new ImageIcon("src/image/" + song.getSongTitle() + ".png");
         ImageAction imageAction = new ImageAction(icon.getImage(), getWidth() - 20, 225);
         songImage = imageAction;
         songImage.setBounds(0, 50, getWidth() - 20, 225);

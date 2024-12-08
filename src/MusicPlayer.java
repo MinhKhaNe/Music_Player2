@@ -6,13 +6,10 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class MusicPlayer extends PlaybackListener {
-    // this will be used to update isPaused more synchronously
     private static final Object playSignal = new Object();
 
-    // need reference so that we can update the gui in this class
     private MusicPlayerGUI musicPlayerGUI;
 
-    // we will need a way to store our song's details, so we will be creating a song class
     private Song currentSong;
     public Song getCurrentSong(){
         return currentSong;
@@ -20,27 +17,21 @@ public class MusicPlayer extends PlaybackListener {
 
     private ArrayList<Song> playlist;
 
-    // we will need to keep track the index we are in the playlist
     private int currentPlaylistIndex;
 
-    // use JLayer library to create an AdvancedPlayer obj which will handle playing the music
     private AdvancedPlayer advancedPlayer;
 
-    // pause boolean flag used to indicate whether the player has been paused
     private boolean isPaused;
 
-    // boolean flag used to tell when the song has finished
     private boolean songFinished;
 
     private boolean pressedNext, pressedPrev;
 
-    // stores in teh last frame when the playback is finished (used for pausing and resuming)
     private int currentFrame;
     public void setCurrentFrame(int frame){
         currentFrame = frame;
     }
 
-    // track how many milliseconds has passed since playing the song (used for updating the slider)
     private int currentTimeInMilli;
     public void setCurrentTimeInMilli(int timeInMilli){
         currentTimeInMilli = timeInMilli;
