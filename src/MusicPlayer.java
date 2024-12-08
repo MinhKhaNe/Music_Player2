@@ -77,7 +77,6 @@ public class MusicPlayer extends PlaybackListener {
     public void loadPlaylist(File playlistFile){
         playlist = new ArrayList<>();
 
-        // store the paths from the text file into the playlist array list
         try{
             FileReader fileReader = new FileReader(playlistFile);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -85,10 +84,8 @@ public class MusicPlayer extends PlaybackListener {
             // reach each line from the text file and store the text into the songPath variable
             String songPath;
             while((songPath = bufferedReader.readLine()) != null){
-                // create song object based on song path
                 Song song = new Song(songPath);
 
-                // add to playlist array list
                 playlist.add(song);
             }
         }catch(Exception e){
@@ -96,7 +93,6 @@ public class MusicPlayer extends PlaybackListener {
         }
 
         if(playlist.size() > 0){
-            // reset playback slider
             musicPlayerGUI.setPlaybackSliderValue(0);
             currentTimeInMilli = 0;
 
@@ -118,10 +114,8 @@ public class MusicPlayer extends PlaybackListener {
 
     public void pauseSong(){
         if(advancedPlayer != null){
-            // update isPaused flag
             isPaused = true;
 
-            // then we want to stop the player
             stopSong();
         }
     }
@@ -135,7 +129,6 @@ public class MusicPlayer extends PlaybackListener {
     }
 
     public void nextSong(){
-        // no need to go to the next song if there is no playlist
         if(playlist == null) return;
 
         // check to see if we have reached the end of the playlist, if so then don't do anything
@@ -164,7 +157,6 @@ public class MusicPlayer extends PlaybackListener {
         musicPlayerGUI.updateSongTitleAndArtist(currentSong);
         musicPlayerGUI.updatePlaybackSlider(currentSong);
 
-        // play the song
         playCurrentSong();
     }
 

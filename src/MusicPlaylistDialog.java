@@ -11,7 +11,6 @@ import java.util.ArrayList;
 public class MusicPlaylistDialog extends JDialog {
     private MusicPlayerGUI musicPlayerGUI;
 
-    // store all of the paths to be written to a txt file (when we load a playlist)
     private ArrayList<String> songPaths;
 
     public MusicPlaylistDialog(MusicPlayerGUI musicPlayerGUI){
@@ -31,7 +30,6 @@ public class MusicPlaylistDialog extends JDialog {
     }
 
     private void addDialogComponents(){
-        // container to hold each song path
         JPanel songContainer = new JPanel();
         songContainer.setLayout(new BoxLayout(songContainer, BoxLayout.Y_AXIS));
         songContainer.setBounds((int)(getWidth() * 0.025), 10, (int)(getWidth() * 0.90), (int) (getHeight() * 0.75));
@@ -82,7 +80,6 @@ public class MusicPlaylistDialog extends JDialog {
                     int result = jFileChooser.showSaveDialog(MusicPlaylistDialog.this);
 
                     if(result == JFileChooser.APPROVE_OPTION){
-                        // we use getSelectedFile() to get reference to the file that we are about to save
                         File selectedFile = jFileChooser.getSelectedFile();
 
                         // convert to .txt file if not done so already

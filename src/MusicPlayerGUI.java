@@ -289,10 +289,14 @@ public class MusicPlayerGUI extends JFrame {
     public void updateSongImage(Song song){
         System.out.println(song.getSongTitle());
 
-        remove(songImage);
+        remove(songImage); // Loại bỏ hình ảnh cũ
 
-        songImage = new JLabel(loadImage("src/assets/" + song.getSongTitle() + ".png"));
+        // Tải ảnh mới
+        ImageIcon icon = new ImageIcon("src/assets/" + song.getSongTitle() + ".png");
+        ImageAction imageAction = new ImageAction(icon.getImage(), getWidth() - 20, 225);
+        songImage = imageAction;
         songImage.setBounds(0, 50, getWidth() - 20, 225);
+
         add(songImage);
 
         revalidate(); // Cập nhật lại bố cục
