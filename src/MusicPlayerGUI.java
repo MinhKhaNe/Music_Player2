@@ -64,29 +64,29 @@ public class MusicPlayerGUI extends JFrame {
         addToolbar();
 
         // load record image
-        songImage = new JLabel(loadImage("src/assets/record.png"));
+        songImage = new JLabel(loadImage("src/image/avatar.png"));
         songImage.setBounds(0, 50, getWidth() - 20, 225);
         add(songImage);
 
         // song title
-        songTitle = new JLabel("Song Title");
-        songTitle.setBounds(0, 285, getWidth() - 10, 30);
-        songTitle.setFont(new Font("Dialog", Font.BOLD, 24));
+        songTitle = new JLabel("Song title");
+        songTitle.setBounds(80, 285, getWidth() - 10, 30);
+        songTitle.setFont(new Font("Dialog", Font.BOLD, 18));
         songTitle.setForeground(TEXT_COLOR);
-        songTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        songTitle.setHorizontalAlignment(SwingConstants.LEFT);
         add(songTitle);
 
         // song artist
-        songArtist = new JLabel("Artist");
-        songArtist.setBounds(0, 315, getWidth() - 10, 30);
-        songArtist.setFont(new Font("Dialog", Font.PLAIN, 24));
+        songArtist = new JLabel("Singer name");
+        songArtist.setBounds(80, 300, getWidth() - 10, 30);
+        songArtist.setFont(new Font("Dialog", Font.PLAIN, 12));
         songArtist.setForeground(TEXT_COLOR);
-        songArtist.setHorizontalAlignment(SwingConstants.CENTER);
+        songArtist.setHorizontalAlignment(SwingConstants.LEFT);
         add(songArtist);
 
         // playback slider
         playbackSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0);
-        playbackSlider.setBounds(getWidth()/2 - 300/2, 365, 300, 40);
+        playbackSlider.setBounds(getWidth()/2 - 300/2, 335, 300, 40);
         playbackSlider.setBackground(null);
         playbackSlider.addMouseListener(new MouseAdapter() {
             @Override
@@ -211,7 +211,7 @@ public class MusicPlayerGUI extends JFrame {
 
     private void addPlaybackBtns(){
         playbackBtns = new JPanel();
-        playbackBtns.setBounds(0, 435, getWidth() - 10, 80);
+        playbackBtns.setBounds(0, 385, getWidth() - 10, 80);
         playbackBtns.setBackground(null);
 
         // previous button
