@@ -215,7 +215,7 @@ public class MusicPlayerGUI extends JFrame {
         playbackBtns.setBackground(null);
 
         // previous button
-        JButton prevButton = new JButton(loadImage("src/assets/previous.png"));
+        JButton prevButton = new JButton(loadImage("src/image/previous.png"));
         prevButton.setBorderPainted(false);
         prevButton.setBackground(null);
         prevButton.addActionListener(new ActionListener() {
@@ -228,7 +228,7 @@ public class MusicPlayerGUI extends JFrame {
         playbackBtns.add(prevButton);
 
         // play button
-        JButton playButton = new JButton(loadImage("src/assets/play.png"));
+        JButton playButton = new JButton(loadImage("src/image/play.png"));
         playButton.setBorderPainted(false);
         playButton.setBackground(null);
         playButton.addActionListener(new ActionListener() {
@@ -244,7 +244,7 @@ public class MusicPlayerGUI extends JFrame {
         playbackBtns.add(playButton);
 
         // pause button
-        JButton pauseButton = new JButton(loadImage("src/assets/pause.png"));
+        JButton pauseButton = new JButton(loadImage("src/image/pause.png"));
         pauseButton.setBorderPainted(false);
         pauseButton.setBackground(null);
         pauseButton.setVisible(false);
@@ -261,7 +261,7 @@ public class MusicPlayerGUI extends JFrame {
         playbackBtns.add(pauseButton);
 
         // next button
-        JButton nextButton = new JButton(loadImage("src/assets/next.png"));
+        JButton nextButton = new JButton(loadImage("src/image/next.png"));
         nextButton.setBorderPainted(false);
         nextButton.setBackground(null);
         nextButton.addActionListener(new ActionListener() {

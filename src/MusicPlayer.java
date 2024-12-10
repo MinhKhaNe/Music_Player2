@@ -103,6 +103,10 @@ public class MusicPlayer extends PlaybackListener {
         }
     }
 
+    public void replaySong(){
+
+    }
+
     public void pauseSong(){
         if(advancedPlayer != null){
             isPaused = true;
