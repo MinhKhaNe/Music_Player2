@@ -18,6 +18,8 @@ public class MusicPlayerGUI extends JFrame {
     private MusicPlayer musicPlayer;
     private boolean replayingSong = false;
     private boolean isPlaying = false;
+    private boolean replayImage=false;
+    private Timer timer;
 
     // allow us to use file explorer in our app
     private JFileChooser jFileChooser;
@@ -25,6 +27,7 @@ public class MusicPlayerGUI extends JFrame {
     private JLabel songTitle, songArtist, songImage;
     private JPanel playbackBtns;
     private JSlider playbackSlider;
+    private JButton replayButton;
 
     public MusicPlayerGUI(){
         // calls JFrame constructor to configure out gui and set the title heaader to "Music Player"
@@ -217,13 +220,15 @@ public class MusicPlayerGUI extends JFrame {
         playbackBtns.setBounds(0, 385, getWidth() - 10, 80);
         playbackBtns.setBackground(null);
 
-        JButton replayButton = new JButton(loadImage("src/image/replay.png"));
+        replayButton = new JButton(loadImage("src/image/replay.png"));
         replayButton.setBorderPainted(false);
         replayButton.setBackground(null);
         replayButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // go to the next song
+                replayImage = !replayImage;
+                updateReplayImage();
+
                 musicPlayer.replaySong();
             }
         });
@@ -319,6 +324,8 @@ public class MusicPlayerGUI extends JFrame {
             updatePlaybackSlider(song);
 
             replayingSong = false;
+            replayImage=false;
+            updateReplayImage();
         }
     }
 
@@ -333,11 +340,8 @@ public class MusicPlayerGUI extends JFrame {
     }
 
     public void updateSongImage(Song song){
-        System.out.println(song.getSongTitle());
+        remove(songImage);
 
-        remove(songImage); // Loại bỏ hình ảnh cũ
-
-        // Tải ảnh mới
         ImageIcon icon = new ImageIcon("src/image/" + song.getSongTitle() + ".png");
         ImageAction imageAction = new ImageAction(icon.getImage(), getWidth() - 20, 225);
         songImage = imageAction;
@@ -347,6 +351,15 @@ public class MusicPlayerGUI extends JFrame {
 
         revalidate();
         repaint();
+    }
+
+    public void updateReplayImage() {
+        if (replayImage) {
+            replayButton.setIcon(loadImage("src/image/replay1.png"));
+        } else {
+            replayButton.setIcon(loadImage("src/image/replay.png"));
+
+        }
     }
 
     public void updatePlaybackSlider(Song song){
@@ -382,7 +395,7 @@ public class MusicPlayerGUI extends JFrame {
             labelBeginning.setText(song.formatTime(currentSeconds));
         });
 
-        Timer timer = new Timer(1000, new ActionListener() {
+        timer = new Timer(1000, new ActionListener() {
             int currentMilliseconds = 0;
 
             @Override
@@ -410,7 +423,6 @@ public class MusicPlayerGUI extends JFrame {
         }else{
             timer.start();
         }
-
     }
 
 

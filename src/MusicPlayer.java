@@ -27,6 +27,8 @@ public class MusicPlayer extends PlaybackListener {
 
     private boolean pressedNext, pressedPrev;
 
+    private boolean isReplayEnabled = false;
+
     private int currentFrame;
     public void setCurrentFrame(int frame){
         currentFrame = frame;
@@ -102,8 +104,6 @@ public class MusicPlayer extends PlaybackListener {
             playCurrentSong();
         }
     }
-
-    private boolean isReplayEnabled = false;
 
     public void replaySong() {
         isReplayEnabled = true;
@@ -312,7 +312,6 @@ public class MusicPlayer extends PlaybackListener {
                 musicPlayerGUI.approval();
                 musicPlayerGUI.enablePauseButtonDisablePlayButton();
             }else if(playlist == null){
-
                 musicPlayerGUI.enablePlayButtonDisablePauseButton();
             }else{
                 // last song in the playlist
