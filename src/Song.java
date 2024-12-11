@@ -48,6 +48,13 @@ public class Song {
         return formattedTime;
     }
 
+    public String formatTime(int seconds) {
+        long minutes = seconds / 60;
+        long remainingSeconds = seconds % 60;
+        return String.format("%02d:%02d", minutes, remainingSeconds);
+    }
+
+
     // getters
     public String getSongTitle() {
         return songTitle;

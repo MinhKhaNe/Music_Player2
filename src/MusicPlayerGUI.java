@@ -16,6 +16,7 @@ public class MusicPlayerGUI extends JFrame {
     public static final Color TEXT_COLOR = Color.WHITE;
 
     private MusicPlayer musicPlayer;
+    private boolean replayingSong = false;
 
     // allow us to use file explorer in our app
     private JFileChooser jFileChooser;
@@ -301,6 +302,23 @@ public class MusicPlayerGUI extends JFrame {
         add(playbackBtns);
     }
 
+    public void approval(){
+        replayingSong=true;
+        File selectedFile = jFileChooser.getSelectedFile();
+
+        if(replayingSong){
+            Song song = new Song(selectedFile.getPath());
+
+            // load song in music player
+            musicPlayer.loadSong(song);
+
+            // update playback slider
+            updatePlaybackSlider(song);
+
+            replayingSong = false;
+        }
+    }
+
     // this will be used to update our slider from the music player class
     public void setPlaybackSliderValue(int frame){
         playbackSlider.setValue(frame);
@@ -350,6 +368,35 @@ public class MusicPlayerGUI extends JFrame {
 
         playbackSlider.setLabelTable(labelTable);
         playbackSlider.setPaintLabels(true);
+
+        //Update Time
+        playbackSlider.addChangeListener(e -> {
+            int sliderValue = playbackSlider.getValue();
+
+            int currentMilliseconds = (int) (sliderValue / song.getFrameRatePerMilliseconds());
+            int currentSeconds = currentMilliseconds / 1000;
+
+            labelBeginning.setText(song.formatTime(currentSeconds));
+        });
+
+        Timer timer = new Timer(1000, new ActionListener() {
+            int currentMilliseconds = 0;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                currentMilliseconds += 1000;
+
+                playbackSlider.setValue((int) (currentMilliseconds * song.getFrameRatePerMilliseconds()));
+
+                labelBeginning.setText(song.formatTime(currentMilliseconds / 1000));
+
+                if (currentMilliseconds >= song.getMp3File().getLengthInMilliseconds()) {
+                    ((Timer) e.getSource()).stop();
+                }
+            }
+        });
+
+        timer.start();
     }
 
     public void enablePauseButtonDisablePlayButton(){

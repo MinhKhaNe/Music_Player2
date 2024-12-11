@@ -309,6 +309,7 @@ public class MusicPlayer extends PlaybackListener {
             if(isReplayEnabled){
                 playCurrentSong();
                 isReplayEnabled = false;
+                musicPlayerGUI.approval();
             }
 
             if(playlist == null){
