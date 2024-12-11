@@ -7,7 +7,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class MusicPlayerGUI extends JFrame {
@@ -19,6 +20,7 @@ public class MusicPlayerGUI extends JFrame {
     private boolean replayingSong = false;
     private boolean isPlaying = false;
     private boolean replayImage=false;
+    private boolean isFavorite=false;
     private Timer timer;
 
     // allow us to use file explorer in our app
@@ -28,6 +30,7 @@ public class MusicPlayerGUI extends JFrame {
     private JPanel playbackBtns;
     private JSlider playbackSlider;
     private JButton replayButton;
+    private JButton favoriteButton;
 
     public MusicPlayerGUI(){
         // calls JFrame constructor to configure out gui and set the title heaader to "Music Player"
@@ -73,21 +76,47 @@ public class MusicPlayerGUI extends JFrame {
         songImage.setBounds(0, 50, getWidth() - 20, 225);
         add(songImage);
 
-        // song title
+        // Song title
         songTitle = new JLabel("Song title");
-        songTitle.setBounds(80, 285, getWidth() - 10, 30);
-        songTitle.setFont(new Font("Dialog", Font.BOLD, 18));
+        songTitle.setBounds(80, 285, getWidth() - 100, 30); // Giảm chiều rộng để nhường chỗ cho nút
+        songTitle.setFont(new Font("Dialog", Font.BOLD, 17));
         songTitle.setForeground(TEXT_COLOR);
         songTitle.setHorizontalAlignment(SwingConstants.LEFT);
         add(songTitle);
 
-        // song artist
         songArtist = new JLabel("Singer name");
-        songArtist.setBounds(80, 300, getWidth() - 10, 30);
+        songArtist.setBounds(80, 305, getWidth() - 100, 30); // Cùng chỉnh chiều rộng như trên
         songArtist.setFont(new Font("Dialog", Font.PLAIN, 12));
         songArtist.setForeground(TEXT_COLOR);
         songArtist.setHorizontalAlignment(SwingConstants.LEFT);
         add(songArtist);
+
+        File favoriteFile = new File("src/assets/Favorite.txt");
+        favoriteButton = new JButton(loadImage("src/image/heart.png"));
+        favoriteButton.setBounds(getWidth() - 100, 285, 50, 50); // Vị trí bên phải songTitle và songArtist
+        favoriteButton.setBorderPainted(false);
+        favoriteButton.setBackground(null);
+        favoriteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String songInfo = songTitle.getText();
+                isFavorite = !isFavorite;
+                try {
+                    if (isFavorite) {
+                        addSongToFavorites(favoriteFile, songInfo);
+                        System.out.println("like");
+                    } else {
+                        removeSongFromFavorites(favoriteFile, songInfo);
+                        System.out.println("unlike");
+                    }
+                    updateFavoriteSong();
+                }catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        add(favoriteButton);
+
 
         // playback slider
         playbackSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0);
@@ -127,6 +156,45 @@ public class MusicPlayerGUI extends JFrame {
         // playback buttons (i.e. previous, play, next)
         addPlaybackBtns();
     }
+
+    private void addSongToFavorites(File file, String songInfo) throws IOException {
+        ArrayList<String> existingSongs = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                existingSongs.add(line.trim());
+            }
+        }
+
+        if (!existingSongs.contains("C:\\Users\\Windows\\Desktop\\Music_Player2\\src\\assets\\"+songInfo + ".mp3")) {
+            try (FileWriter writer = new FileWriter(file, true)) {
+                writer.write("C:\\Users\\Windows\\Desktop\\Music_Player2\\src\\assets\\"+songInfo + ".mp3\n");
+            }
+        }
+    }
+
+    private void removeSongFromFavorites(File file, String songInfo) throws IOException {
+        ArrayList<String> remainingLines = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (!line.trim().equals("C:\\Users\\Windows\\Desktop\\Music_Player2\\src\\assets\\"+songInfo + ".mp3")) {
+                    remainingLines.add(line);
+                }
+            }
+        }
+
+        // Ghi lại các dòng còn lại vào file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            for (String line : remainingLines) {
+                writer.write(line);
+                writer.newLine();
+            }
+        }
+    }
+
 
     private void addToolbar(){
         JToolBar toolBar = new JToolBar();
@@ -170,6 +238,9 @@ public class MusicPlayerGUI extends JFrame {
 
                     // toggle on pause button and toggle off play button
                     enablePauseButtonDisablePlayButton();
+
+                    isFavorite = false;
+                    updateFavoriteSong();
                 }
             }
         });
@@ -207,10 +278,35 @@ public class MusicPlayerGUI extends JFrame {
 
                     // load playlist
                     musicPlayer.loadPlaylist(selectedFile);
+
                 }
             }
         });
         playlistMenu.add(loadPlaylist);
+
+        JMenu favoriteMenu = new JMenu("Favorite Song");
+        menuBar.add(favoriteMenu);
+        JMenuItem playFavoriteSong = new JMenuItem("Play Favorite Song");
+        playFavoriteSong.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser jFileChooser = new JFileChooser();
+                jFileChooser.setFileFilter(new FileNameExtensionFilter("Favorite", "txt"));
+                jFileChooser.setCurrentDirectory(new File("src/assets"));
+
+                int result = jFileChooser.showOpenDialog(MusicPlayerGUI.this);
+                File selectedFile = jFileChooser.getSelectedFile();
+
+                if(result == JFileChooser.APPROVE_OPTION && selectedFile != null){
+                    musicPlayer.stopSong();
+
+                    // load playlist
+                    musicPlayer.loadPlaylist(selectedFile);
+
+                }
+            }
+        });
+        favoriteMenu.add(playFavoriteSong);
 
         add(toolBar);
     }
@@ -282,14 +378,12 @@ public class MusicPlayerGUI extends JFrame {
         });
         playbackBtns.add(pauseButton);
 
-        // next button
         JButton nextButton = new JButton(loadImage("src/image/next.png"));
         nextButton.setBorderPainted(false);
         nextButton.setBackground(null);
         nextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // go to the next song
                 musicPlayer.nextSong();
             }
         });
@@ -301,7 +395,6 @@ public class MusicPlayerGUI extends JFrame {
         timerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // go to the next song
                 musicPlayer.timer();
             }
         });
@@ -317,10 +410,8 @@ public class MusicPlayerGUI extends JFrame {
         if(replayingSong){
             Song song = new Song(selectedFile.getPath());
 
-            // load song in music player
             musicPlayer.loadSong(song);
 
-            // update playback slider
             updatePlaybackSlider(song);
 
             replayingSong = false;
@@ -329,7 +420,6 @@ public class MusicPlayerGUI extends JFrame {
         }
     }
 
-    // this will be used to update our slider from the music player class
     public void setPlaybackSliderValue(int frame){
         playbackSlider.setValue(frame);
     }
@@ -359,6 +449,14 @@ public class MusicPlayerGUI extends JFrame {
         } else {
             replayButton.setIcon(loadImage("src/image/replay.png"));
 
+        }
+    }
+
+    public void updateFavoriteSong() {
+        if (isFavorite) {
+            favoriteButton.setIcon(loadImage("src/image/heart1.png"));
+        } else {
+            favoriteButton.setIcon(loadImage("src/image/heart.png"));
         }
     }
 
