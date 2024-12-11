@@ -279,6 +279,9 @@ public class MusicPlayerGUI extends JFrame {
                     // load playlist
                     musicPlayer.loadPlaylist(selectedFile);
 
+                    Song song = musicPlayer.getCurrentSong();
+                    updateSongImage(song);
+
                 }
             }
         });
@@ -302,6 +305,11 @@ public class MusicPlayerGUI extends JFrame {
 
                     // load playlist
                     musicPlayer.loadPlaylist(selectedFile);
+
+                    Song song = musicPlayer.getCurrentSong();
+                    System.out.println(song.getSongTitle());
+
+                    updateSongImage(song);
 
                 }
             }

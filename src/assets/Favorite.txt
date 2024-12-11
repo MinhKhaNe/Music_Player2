@@ -1,4 +1,3 @@
 C:\Users\Windows\Desktop\Music_Player2\src\assets\Cắt Đôi Nỗi Sầu.mp3
-C:\Users\Windows\Desktop\Music_Player2\src\assets\Chúng Ta Của Tương Lai.mp3
 C:\Users\Windows\Desktop\Music_Player2\src\assets\Mất Kết Nối.mp3
 C:\Users\Windows\Desktop\Music_Player2\src\assets\PHÓNG ZÌN ZÌN.mp3

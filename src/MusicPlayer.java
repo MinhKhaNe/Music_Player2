@@ -98,6 +98,7 @@ public class MusicPlayer extends PlaybackListener {
             // update gui
             musicPlayerGUI.enablePauseButtonDisablePlayButton();
             musicPlayerGUI.updateSongTitleAndArtist(currentSong);
+            System.out.println("new Song");
             musicPlayerGUI.updatePlaybackSlider(currentSong);
 
             // start song
