@@ -17,11 +17,11 @@ public class StartScreen extends JFrame {
 
         ImageIcon beginImage = new ImageIcon("src/image/avatar.png");
         JLabel imageLabel = new JLabel(beginImage, JLabel.CENTER);
-        add(imageLabel, BorderLayout.CENTER);
+        add(imageLabel);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
         buttonPanel.setBackground(Color.BLACK);
-        JButton startButton = new JButton("Click anywhere to start");
+        JButton startButton = new JButton("Click to start");
         startButton.setFont(new Font("Dialog", Font.PLAIN, 24));
         startButton.setBackground(Color.BLACK);
         startButton.setForeground(Color.WHITE);

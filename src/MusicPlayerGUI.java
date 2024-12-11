@@ -86,6 +86,7 @@ public class MusicPlayerGUI extends JFrame {
 
         // playback slider
         playbackSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0);
+        playbackSlider.setUI(new CustomSliderUI(playbackSlider));
         playbackSlider.setBounds(getWidth()/2 - 300/2, 335, 300, 40);
         playbackSlider.setBackground(null);
         playbackSlider.addMouseListener(new MouseAdapter() {
@@ -214,6 +215,18 @@ public class MusicPlayerGUI extends JFrame {
         playbackBtns.setBounds(0, 385, getWidth() - 10, 80);
         playbackBtns.setBackground(null);
 
+        JButton replayButton = new JButton(loadImage("src/image/replay.png"));
+        replayButton.setBorderPainted(false);
+        replayButton.setBackground(null);
+        replayButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // go to the next song
+                musicPlayer.replaySong();
+            }
+        });
+        playbackBtns.add(replayButton);
+
         // previous button
         JButton prevButton = new JButton(loadImage("src/image/previous.png"));
         prevButton.setBorderPainted(false);
@@ -273,6 +286,18 @@ public class MusicPlayerGUI extends JFrame {
         });
         playbackBtns.add(nextButton);
 
+        JButton timerButton = new JButton(loadImage("src/image/timer.png"));
+        timerButton.setBorderPainted(false);
+        timerButton.setBackground(null);
+        timerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // go to the next song
+                musicPlayer.timer();
+            }
+        });
+        playbackBtns.add(timerButton);
+
         add(playbackBtns);
     }
 
@@ -329,8 +354,8 @@ public class MusicPlayerGUI extends JFrame {
 
     public void enablePauseButtonDisablePlayButton(){
         // retrieve reference to play button from playbackBtns panel
-        JButton playButton = (JButton) playbackBtns.getComponent(1);
-        JButton pauseButton = (JButton) playbackBtns.getComponent(2);
+        JButton playButton = (JButton) playbackBtns.getComponent(2);
+        JButton pauseButton = (JButton) playbackBtns.getComponent(3);
 
         // turn off play button
         playButton.setVisible(false);
@@ -343,8 +368,8 @@ public class MusicPlayerGUI extends JFrame {
 
     public void enablePlayButtonDisablePauseButton(){
         // retrieve reference to play button from playbackBtns panel
-        JButton playButton = (JButton) playbackBtns.getComponent(1);
-        JButton pauseButton = (JButton) playbackBtns.getComponent(2);
+        JButton playButton = (JButton) playbackBtns.getComponent(2);
+        JButton pauseButton = (JButton) playbackBtns.getComponent(3);
 
         // turn on play button
         playButton.setVisible(true);

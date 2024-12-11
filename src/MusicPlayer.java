@@ -103,7 +103,14 @@ public class MusicPlayer extends PlaybackListener {
         }
     }
 
-    public void replaySong(){
+    private boolean isReplayEnabled = false;
+
+    public void replaySong() {
+        isReplayEnabled = true;
+    }
+
+
+    public void timer(){
 
     }
 
@@ -289,7 +296,7 @@ public class MusicPlayer extends PlaybackListener {
 
     @Override
     public void playbackFinished(PlaybackEvent evt) {
-        // this method gets called when the song finishes or if the player gets closed
+
         System.out.println("Playback Finished");
         if(isPaused){
             currentFrame += (int) ((double) evt.getFrame() * currentSong.getFrameRatePerMilliseconds());
@@ -299,6 +306,10 @@ public class MusicPlayer extends PlaybackListener {
 
             // when the song ends
             songFinished = true;
+            if(isReplayEnabled){
+                playCurrentSong();
+                isReplayEnabled = false;
+            }
 
             if(playlist == null){
                 // update gui

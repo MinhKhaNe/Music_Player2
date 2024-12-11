@@ -7,9 +7,6 @@ public class App {
             public void run(){
                 new StartScreen().setVisible(true);
 
-                //Song song = new Song("src/assets/Wind Riders - Asher Fulero.mp3");
-                //System.out.println(song.getSongTitle());
-                //System.out.println(song.getSongArtist());
             }
         });
     }
