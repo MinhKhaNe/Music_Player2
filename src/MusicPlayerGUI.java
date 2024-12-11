@@ -17,6 +17,7 @@ public class MusicPlayerGUI extends JFrame {
 
     private MusicPlayer musicPlayer;
     private boolean replayingSong = false;
+    private boolean isPlaying = false;
 
     // allow us to use file explorer in our app
     private JFileChooser jFileChooser;
@@ -253,6 +254,7 @@ public class MusicPlayerGUI extends JFrame {
 
                 // play or resume song
                 musicPlayer.playCurrentSong();
+                isPlaying=true;
             }
         });
         playbackBtns.add(playButton);
@@ -270,6 +272,7 @@ public class MusicPlayerGUI extends JFrame {
 
                 // pause the song
                 musicPlayer.pauseSong();
+                isPlaying=false;
             }
         });
         playbackBtns.add(pauseButton);
@@ -342,7 +345,7 @@ public class MusicPlayerGUI extends JFrame {
 
         add(songImage);
 
-        revalidate(); // Cập nhật lại bố cục
+        revalidate();
         repaint();
     }
 
@@ -396,8 +399,20 @@ public class MusicPlayerGUI extends JFrame {
             }
         });
 
-        timer.start();
+        if (timer != null && timer.isRunning()) {
+            timer.restart();
+        }else {
+            timer.start();
+        }
+
+        if(!isPlaying){
+            timer.stop();
+        }else{
+            timer.start();
+        }
+
     }
+
 
     public void enablePauseButtonDisablePlayButton(){
         // retrieve reference to play button from playbackBtns panel

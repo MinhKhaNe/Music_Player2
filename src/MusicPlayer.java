@@ -310,10 +310,9 @@ public class MusicPlayer extends PlaybackListener {
                 playCurrentSong();
                 isReplayEnabled = false;
                 musicPlayerGUI.approval();
-            }
+                musicPlayerGUI.enablePauseButtonDisablePlayButton();
+            }else if(playlist == null){
 
-            if(playlist == null){
-                // update gui
                 musicPlayerGUI.enablePlayButtonDisablePauseButton();
             }else{
                 // last song in the playlist
