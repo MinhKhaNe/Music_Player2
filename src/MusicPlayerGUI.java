@@ -11,6 +11,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+
 public class MusicPlayerGUI extends JFrame {
     // color configurations
     public static final Color FRAME_COLOR = Color.BLACK;
@@ -31,6 +32,9 @@ public class MusicPlayerGUI extends JFrame {
     private JSlider playbackSlider;
     private JButton replayButton;
     private JButton favoriteButton;
+
+    private MusicWaveVisualizer musicWave;
+
 
     public MusicPlayerGUI(){
         // calls JFrame constructor to configure out gui and set the title heaader to "Music Player"
@@ -65,6 +69,15 @@ public class MusicPlayerGUI extends JFrame {
         jFileChooser.setFileFilter(new FileNameExtensionFilter("MP3", "mp3"));
 
         addGuiComponents();
+
+        musicWave = new MusicWaveVisualizer(); // Initial MP3 file
+        add(musicWave, BorderLayout.SOUTH); // Place the wave panel at the bottom
+    }
+
+    public void updateMusicWave(String filePath) {
+        if (musicWave != null) {
+            musicWave.playAndVisualize(filePath);
+        }
     }
 
     private void addGuiComponents(){
@@ -449,7 +462,32 @@ public class MusicPlayerGUI extends JFrame {
 
         revalidate();
         repaint();
+        startPlaying();
+
     }
+    public MusicPlayer getMusicPlayer() {
+        return musicPlayer;
+    }
+
+    public void startPlaying() {
+        MusicWaveVisualizer waveVisualizer = new MusicWaveVisualizer();
+
+        setLayout(new BorderLayout()); // Sử dụng BorderLayout để đặt các thành phần
+        add(waveVisualizer, BorderLayout.SOUTH); // Đặt MusicWaveVisualizer ở dưới cùng
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
+        setSize(400, 600); // Đặt kích thước của frame lớn hơn để chứa MusicWaveVisualizer
+        setLocationRelativeTo(null); // Đặt cửa sổ ở giữa màn hình
+        setVisible(true);
+
+        MusicPlayer musicPlayer = getMusicPlayer();
+        Song song = musicPlayer.getCurrentSong();
+
+        String mp3FilePath = "src/assets/" + song.getSongTitle() + ".mp3";
+        System.out.println("src/assets/" + song.getSongTitle() + ".mp3");
+        waveVisualizer.playAndVisualize(mp3FilePath);
+    }
+
 
     public void updateReplayImage() {
         if (replayImage) {
