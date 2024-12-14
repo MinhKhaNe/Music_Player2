@@ -536,7 +536,6 @@ public class MusicPlayerGUI extends JFrame {
         playbackSlider.setLabelTable(labelTable);
         playbackSlider.setPaintLabels(true);
 
-        //Update Time
         playbackSlider.addChangeListener(e -> {
             int sliderValue = playbackSlider.getValue();
 
@@ -562,12 +561,6 @@ public class MusicPlayerGUI extends JFrame {
                 }
             }
         });
-
-        if (timer != null && timer.isRunning()) {
-            timer.restart();
-        }else {
-            timer.start();
-        }
 
         if(!isPlaying){
             timer.stop();
