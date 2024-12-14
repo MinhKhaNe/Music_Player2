@@ -8,17 +8,19 @@ import javazoom.jl.player.Player;
 
 public class MusicWaveVisualizer extends JPanel {
     private final ArrayList<Integer> amplitudes = new ArrayList<>();
-    private final int width = 400; // Chiều rộng của bảng sóng
-    private final int height = 300; // Chiều cao của bảng sóng
+    private final int width = 400;
+    private final int height = 300;
+    private Thread visualizationThread;
+    private volatile boolean isRunning;
 
     public MusicWaveVisualizer() {
-        setPreferredSize(new Dimension(width, 100)); // Đặt kích thước của JPanel cho bảng sóng
+        setPreferredSize(new Dimension(width, 100));
         setBackground(Color.BLACK);
     }
 
     public void playAndVisualize(String filePath) {
-        System.out.println("lalala: " + filePath);
-        new Thread(() -> {
+        isRunning = true;
+        visualizationThread = new Thread(() -> {
             try {
                 FileInputStream fileInputStream = new FileInputStream(filePath);
                 Player player = new Player(fileInputStream);
@@ -28,7 +30,7 @@ public class MusicWaveVisualizer extends JPanel {
                 Decoder decoder = new Decoder();
 
                 Header header;
-                while ((header = bitstream.readFrame()) != null) {
+                while (isRunning && (header = bitstream.readFrame()) != null) {
                     SampleBuffer output = (SampleBuffer) decoder.decodeFrame(header, bitstream);
                     short[] samples = output.getBuffer();
 
@@ -42,7 +44,6 @@ public class MusicWaveVisualizer extends JPanel {
                     }
                     amplitudes.add(sum / samples.length);
 
-                    // Cập nhật bảng sóng
                     SwingUtilities.invokeLater(this::repaint);
 
                     bitstream.closeFrame();
@@ -51,11 +52,32 @@ public class MusicWaveVisualizer extends JPanel {
                 }
 
                 player.close();
+                bitstream.close();
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }).start();
+        });
+        visualizationThread.start();
+    }
+
+    public synchronized void updateWaveData(String filePath) {
+        stopCurrentVisualization();
+        amplitudes.clear();
+        repaint();
+        playAndVisualize(filePath);
+    }
+
+    private synchronized void stopCurrentVisualization() {
+        isRunning = false;
+        if (visualizationThread != null && visualizationThread.isAlive()) {
+            try {
+                visualizationThread.join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -67,20 +89,20 @@ public class MusicWaveVisualizer extends JPanel {
             return;
         }
 
-        int step = Math.max(1, amplitudes.size() / width);
-        int startX = (int) (width * 0.1); // Bắt đầu tại 10% chiều rộng
-        int endX = (int) (width * 0.9); // Kết thúc tại 90% chiều rộng
+        int startX = (int) (width * 0.1);
+        int endX = (int) (width * 0.9);
 
         for (int i = 0; i < amplitudes.size(); i++) {
             int value = amplitudes.get(i);
-            int barHeight = (int) ((value / 32768.0) * height); // Normalize amplitude
+            int barHeight = (int) ((value / 32768.0) * height);
             int barX = startX + (endX - startX) * i / (width - 1);
             int barY = getHeight() / 2 - barHeight / 2;
             g.drawLine(barX, barY, barX, barY + barHeight);
         }
-        repaint();
     }
 }
+
+
 
 
 

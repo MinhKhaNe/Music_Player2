@@ -70,14 +70,8 @@ public class MusicPlayerGUI extends JFrame {
 
         addGuiComponents();
 
-        musicWave = new MusicWaveVisualizer(); // Initial MP3 file
-        add(musicWave, BorderLayout.SOUTH); // Place the wave panel at the bottom
-    }
-
-    public void updateMusicWave(String filePath) {
-        if (musicWave != null) {
-            musicWave.playAndVisualize(filePath);
-        }
+        musicWave = new MusicWaveVisualizer();
+        add(musicWave, BorderLayout.SOUTH);
     }
 
     private void addGuiComponents(){
@@ -254,6 +248,10 @@ public class MusicPlayerGUI extends JFrame {
 
                     isFavorite = false;
                     updateFavoriteSong();
+
+                    String mp3FilePath = "src/assets/" + song.getSongTitle() + ".mp3";
+                    musicWave.updateWaveData(mp3FilePath);
+                    startPlaying();
                 }
             }
         });
@@ -462,30 +460,39 @@ public class MusicPlayerGUI extends JFrame {
 
         revalidate();
         repaint();
-        startPlaying();
-
     }
     public MusicPlayer getMusicPlayer() {
         return musicPlayer;
     }
 
     public void startPlaying() {
-        MusicWaveVisualizer waveVisualizer = new MusicWaveVisualizer();
+        // Xóa MusicWaveVisualizer cũ nếu tồn tại
+        if (musicWave != null) {
+            remove(musicWave); // Xóa panel khỏi JFrame
+        }
 
-        setLayout(new BorderLayout()); // Sử dụng BorderLayout để đặt các thành phần
-        add(waveVisualizer, BorderLayout.SOUTH); // Đặt MusicWaveVisualizer ở dưới cùng
+        // Tạo MusicWaveVisualizer mới
+        musicWave = new MusicWaveVisualizer();
+        musicWave.setBounds(0, 450, 400, 100); // Đặt y = 450
+
+        setLayout(null);
+        add(musicWave); // Thêm panel mới vào JFrame
+        revalidate(); // Đảm bảo bố cục được cập nhật
+        repaint();    // Làm mới giao diện JFrame
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
-        setSize(400, 600); // Đặt kích thước của frame lớn hơn để chứa MusicWaveVisualizer
-        setLocationRelativeTo(null); // Đặt cửa sổ ở giữa màn hình
+        setSize(400, 600);
+        setLocationRelativeTo(null);
         setVisible(true);
+        getContentPane().setBackground(FRAME_COLOR);
 
+        // Lấy thông tin bài hát và cập nhật sóng âm
         MusicPlayer musicPlayer = getMusicPlayer();
         Song song = musicPlayer.getCurrentSong();
 
         String mp3FilePath = "src/assets/" + song.getSongTitle() + ".mp3";
-        System.out.println("src/assets/" + song.getSongTitle() + ".mp3");
-        waveVisualizer.playAndVisualize(mp3FilePath);
+        musicWave.updateWaveData(mp3FilePath); // Bắt đầu visualization mới
     }
 
 
