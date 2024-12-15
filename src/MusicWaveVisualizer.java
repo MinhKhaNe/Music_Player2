@@ -12,6 +12,9 @@ public class MusicWaveVisualizer extends JPanel {
     private final int height = 300;
     private Thread visualizationThread;
     private volatile boolean isRunning;
+    private boolean isPlaying = true;
+    private String currentFilePath; // Lưu đường dẫn file hiện tại
+
 
     public MusicWaveVisualizer() {
         setPreferredSize(new Dimension(width, 100));
@@ -30,7 +33,7 @@ public class MusicWaveVisualizer extends JPanel {
                 Decoder decoder = new Decoder();
 
                 Header header;
-                while (isRunning && (header = bitstream.readFrame()) != null) {
+                while (isRunning && isPlaying && (header = bitstream.readFrame()) != null) {
                     SampleBuffer output = (SampleBuffer) decoder.decodeFrame(header, bitstream);
                     short[] samples = output.getBuffer();
 
@@ -50,7 +53,6 @@ public class MusicWaveVisualizer extends JPanel {
                     long frameDuration = (long) header.ms_per_frame();
                     Thread.sleep(frameDuration);
                 }
-
                 player.close();
                 bitstream.close();
 
@@ -61,8 +63,20 @@ public class MusicWaveVisualizer extends JPanel {
         visualizationThread.start();
     }
 
+    public synchronized void setPlaying(boolean isPlaying) {
+        this.isRunning = isPlaying;
+        if (!isRunning) {
+            stopCurrentVisualization();
+        }  else {
+            // Tiếp tục vẽ sóng âm thanh
+            if (visualizationThread == null || !visualizationThread.isAlive()) {
+                playAndVisualize(currentFilePath);
+            }
+        }
+    }
+
     public synchronized void updateWaveData(String filePath) {
-        stopCurrentVisualization();
+        currentFilePath = filePath;
         amplitudes.clear();
         repaint();
         playAndVisualize(filePath);

@@ -159,6 +159,7 @@ public class MusicPlayer extends PlaybackListener {
         musicPlayerGUI.enablePauseButtonDisablePlayButton();
         musicPlayerGUI.updateSongTitleAndArtist(currentSong);
         musicPlayerGUI.updatePlaybackSlider(currentSong);
+        musicPlayerGUI.updateSongImage(currentSong);
 
         playCurrentSong();
     }
@@ -192,6 +193,7 @@ public class MusicPlayer extends PlaybackListener {
         musicPlayerGUI.enablePauseButtonDisablePlayButton();
         musicPlayerGUI.updateSongTitleAndArtist(currentSong);
         musicPlayerGUI.updatePlaybackSlider(currentSong);
+        musicPlayerGUI.updateSongImage(currentSong);
 
         // play the song
         playCurrentSong();

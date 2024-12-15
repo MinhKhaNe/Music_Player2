@@ -162,6 +162,7 @@ public class MusicPlayerGUI extends JFrame {
 
         // playback buttons (i.e. previous, play, next)
         addPlaybackBtns();
+
     }
 
     private void addSongToFavorites(File file, String songInfo) throws IOException {
@@ -248,9 +249,6 @@ public class MusicPlayerGUI extends JFrame {
                     isFavorite = false;
                     updateFavoriteSong();
 
-                    String mp3FilePath = "src/assets/" + song.getSongTitle() + ".mp3";
-                    musicWave.updateWaveData(mp3FilePath);
-                    startPlaying();
                 }
             }
         });
@@ -291,7 +289,6 @@ public class MusicPlayerGUI extends JFrame {
 
                     Song song = musicPlayer.getCurrentSong();
                     updateSongImage(song);
-
                 }
             }
         });
@@ -374,6 +371,7 @@ public class MusicPlayerGUI extends JFrame {
                 // play or resume song
                 musicPlayer.playCurrentSong();
                 isPlaying=true;
+                musicWave.setPlaying(isPlaying);
             }
         });
         playbackBtns.add(playButton);
@@ -392,6 +390,7 @@ public class MusicPlayerGUI extends JFrame {
                 // pause the song
                 musicPlayer.pauseSong();
                 isPlaying=false;
+                musicWave.setPlaying(isPlaying);
             }
         });
         playbackBtns.add(pauseButton);
@@ -435,6 +434,9 @@ public class MusicPlayerGUI extends JFrame {
             replayingSong = false;
             replayImage=false;
             updateReplayImage();
+            String mp3FilePath = "src/assets/" + song.getSongTitle() + ".mp3";
+            musicWave.updateWaveData(mp3FilePath);
+            startPlaying();
         }
     }
 
@@ -459,7 +461,12 @@ public class MusicPlayerGUI extends JFrame {
 
         revalidate();
         repaint();
+
+        String mp3FilePath = "src/assets/" + song.getSongTitle() + ".mp3";
+        musicWave.updateWaveData(mp3FilePath);
+        startPlaying();
     }
+
     public MusicPlayer getMusicPlayer() {
         return musicPlayer;
     }
