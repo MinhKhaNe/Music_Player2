@@ -43,3 +43,9 @@
   <img src="https://github.com/user-attachments/assets/083f9eb3-cb0e-4fad-bf41-325d730640ef"
 >
 </p>
+
+<h2>Main Interface</h2>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/083f9eb3-cb0e-4fad-bf41-325d730640ef"
+>
+</p>
