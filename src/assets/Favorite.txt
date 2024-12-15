@@ -1,3 +1,4 @@
-C:\Users\Windows\Desktop\Music_Player2\src\assets\PHÓNG ZÌN ZÌN.mp3
-C:\Users\Windows\Desktop\Music_Player2\src\assets\Từng Quen.mp3
-C:\Users\Windows\Desktop\Music_Player2\src\assets\Chuyến Xe Cuộc Đời.mp3
+src/assets/PHÓNG ZÌN ZÌN.mp3
+src/assets/Từng Quen.mp3
+src/assets/Chuyến Xe Cuộc Đời.mp3
+src/assets/À Lôi.mp3

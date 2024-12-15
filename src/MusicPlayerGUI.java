@@ -174,9 +174,9 @@ public class MusicPlayerGUI extends JFrame {
             }
         }
 
-        if (!existingSongs.contains("C:\\Users\\Windows\\Desktop\\Music_Player2\\src\\assets\\"+songInfo + ".mp3")) {
+        if (!existingSongs.contains("src/assets/"+songInfo + ".mp3")) {
             try (FileWriter writer = new FileWriter(file, true)) {
-                writer.write("C:\\Users\\Windows\\Desktop\\Music_Player2\\src\\assets\\"+songInfo + ".mp3\n");
+                writer.write("src/assets/"+songInfo + ".mp3\n");
             }
         }
     }
@@ -187,7 +187,7 @@ public class MusicPlayerGUI extends JFrame {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (!line.trim().equals("C:\\Users\\Windows\\Desktop\\Music_Player2\\src\\assets\\"+songInfo + ".mp3")) {
+                if (!line.trim().equals("src/assets/"+songInfo + ".mp3")) {
                     remainingLines.add(line);
                 }
             }
@@ -201,7 +201,6 @@ public class MusicPlayerGUI extends JFrame {
             }
         }
     }
-
 
     private void addToolbar(){
         JToolBar toolBar = new JToolBar();
@@ -568,7 +567,6 @@ public class MusicPlayerGUI extends JFrame {
             timer.start();
         }
     }
-
 
     public void enablePauseButtonDisablePlayButton(){
         // retrieve reference to play button from playbackBtns panel
