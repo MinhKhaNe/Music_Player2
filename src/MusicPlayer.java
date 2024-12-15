@@ -89,19 +89,15 @@ public class MusicPlayer extends PlaybackListener {
             musicPlayerGUI.setPlaybackSliderValue(0);
             currentTimeInMilli = 0;
 
-            // update current song to the first song in the playlist
             currentSong = playlist.get(0);
 
-            // start from the beginning frame
             currentFrame = 0;
 
-            // update gui
             musicPlayerGUI.enablePauseButtonDisablePlayButton();
             musicPlayerGUI.updateSongTitleAndArtist(currentSong);
             System.out.println("new Song");
             musicPlayerGUI.updatePlaybackSlider(currentSong);
 
-            // start song
             playCurrentSong();
         }
     }

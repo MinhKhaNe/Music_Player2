@@ -23,6 +23,7 @@ public class MusicPlayerGUI extends JFrame {
     private boolean replayImage=false;
     private boolean isFavorite=false;
     private Timer timer;
+    private boolean timerFinished;
 
     // allow us to use file explorer in our app
     private JFileChooser jFileChooser;
@@ -32,6 +33,7 @@ public class MusicPlayerGUI extends JFrame {
     private JSlider playbackSlider;
     private JButton replayButton;
     private JButton favoriteButton;
+    private JButton timerButton;
 
     private MusicWaveVisualizer musicWave;
 
@@ -194,7 +196,6 @@ public class MusicPlayerGUI extends JFrame {
             }
         }
 
-        // Ghi lại các dòng còn lại vào file
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             for (String line : remainingLines) {
                 writer.write(line);
@@ -207,14 +208,11 @@ public class MusicPlayerGUI extends JFrame {
         JToolBar toolBar = new JToolBar();
         toolBar.setBounds(0, 0, getWidth(), 20);
 
-        // prevent toolbar from being moved
         toolBar.setFloatable(false);
 
-        // add drop down menu
         JMenuBar menuBar = new JMenuBar();
         toolBar.add(menuBar);
 
-        // now we will add a song menu where we will place the loading song option
         JMenu songMenu = new JMenu("Song");
         menuBar.add(songMenu);
 
@@ -227,23 +225,17 @@ public class MusicPlayerGUI extends JFrame {
                 int result = jFileChooser.showOpenDialog(MusicPlayerGUI.this);
                 File selectedFile = jFileChooser.getSelectedFile();
 
-                // this means that we are also checking to see if the user pressed the "open" button
                 if(result == JFileChooser.APPROVE_OPTION && selectedFile != null){
-                    // create a song obj based on selected file
                     Song song = new Song(selectedFile.getPath());
 
-                    // load song in music player
                     musicPlayer.loadSong(song);
 
-                    // update song title and artist
                     updateSongTitleAndArtist(song);
 
                     updateSongImage(song);
 
-                    // update playback slider
                     updatePlaybackSlider(song);
 
-                    // toggle on pause button and toggle off play button
                     enablePauseButtonDisablePlayButton();
 
                     isFavorite = false;
@@ -406,18 +398,116 @@ public class MusicPlayerGUI extends JFrame {
         });
         playbackBtns.add(nextButton);
 
-        JButton timerButton = new JButton(loadImage("src/image/timer.png"));
+        timerButton = new JButton(loadImage("src/image/timer.png"));
         timerButton.setBorderPainted(false);
         timerButton.setBackground(null);
         timerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                musicPlayer.timer();
+                showTimerDialog();
             }
         });
         playbackBtns.add(timerButton);
 
         add(playbackBtns);
+    }
+
+    private void showTimerDialog() {
+        JDialog timerDialog = new JDialog((Frame) null, "Set Timer", true);
+        timerDialog.setSize(300, 200); // Đặt kích thước của dialog
+        timerDialog.setLayout(new BorderLayout());
+
+        JTextField timeDisplayField = new JTextField("0:00", 10);
+        timeDisplayField.setHorizontalAlignment(SwingConstants.CENTER);
+        timeDisplayField.setFont(new Font("Dialog", Font.BOLD, 30));
+        timerDialog.add(timeDisplayField, BorderLayout.CENTER);
+
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JButton okButton = new JButton("OK");
+        JButton cancelButton = new JButton("Cancel");
+        bottomPanel.add(okButton);
+        bottomPanel.add(cancelButton);
+
+        timerDialog.add(bottomPanel, BorderLayout.SOUTH);
+
+        okButton.addActionListener(e -> {
+            String input = timeDisplayField.getText().trim();
+            String[] timeParts = input.split(":");
+
+            if (timeParts.length == 2) {
+                try {
+                    int minutes = Integer.parseInt(timeParts[0].trim());
+                    int seconds = Integer.parseInt(timeParts[1].trim());
+
+                    if (minutes >= 0 && seconds >= 0 && seconds < 60) {
+                        setTimer(minutes * 60 + seconds, timeDisplayField);
+                        timerFinished=true;
+                        timerDialog.dispose();
+                        updateTimer();
+                    } else {
+                        JOptionPane.showMessageDialog(timerDialog, "Invalid time input!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(timerDialog, "Invalid number format!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(timerDialog, "Invalid time format!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        cancelButton.addActionListener(e -> {
+            timerDialog.dispose();
+            timerFinished=false;
+            updateTimer();
+        });
+
+        timerDialog.setLocationRelativeTo(null);
+        timerDialog.setVisible(true);
+    }
+
+    public void updateTimer(){
+        if(timerFinished){
+            timerButton.setIcon(loadImage("src/image/timer1.png"));
+        }else{
+            timerButton.setIcon(loadImage("src/image/timer.png"));
+        }
+    }
+
+    private void setTimer(int totalSeconds, JTextField timeDisplayField) {
+        timeDisplayField.setText(formatTime(totalSeconds));
+
+        Timer currentTimer = new Timer(1000, e -> {
+            int remainingTime = convertToSeconds(timeDisplayField.getText().trim());
+            remainingTime--;
+
+            if (remainingTime <= 0) {
+                ((Timer)e.getSource()).stop();
+                enablePlayButtonDisablePauseButton();
+
+                musicPlayer.pauseSong();
+                isPlaying=false;
+                musicWave.setPlaying(isPlaying);
+                timerFinished=false;
+                updateTimer();
+            } else {
+                timeDisplayField.setText(formatTime(remainingTime));
+            }
+        });
+        currentTimer.setInitialDelay(0);
+        currentTimer.start();
+    }
+
+    private String formatTime(int seconds) {
+        int minutes = seconds / 60;
+        int secs = seconds % 60;
+        return String.format("%d:%02d", minutes, secs);
+    }
+
+    private int convertToSeconds(String time) {
+        String[] parts = time.split(":");
+        int minutes = Integer.parseInt(parts[0]);
+        int seconds = Integer.parseInt(parts[1]);
+        return minutes * 60 + seconds;
     }
 
     public void approval(){
@@ -472,19 +562,17 @@ public class MusicPlayerGUI extends JFrame {
     }
 
     public void startPlaying() {
-        // Xóa MusicWaveVisualizer cũ nếu tồn tại
         if (musicWave != null) {
-            remove(musicWave); // Xóa panel khỏi JFrame
+            remove(musicWave);
         }
 
-        // Tạo MusicWaveVisualizer mới
         musicWave = new MusicWaveVisualizer();
         musicWave.setBounds(0, 450, 400, 100); // Đặt y = 450
 
         setLayout(null);
-        add(musicWave); // Thêm panel mới vào JFrame
-        revalidate(); // Đảm bảo bố cục được cập nhật
-        repaint();    // Làm mới giao diện JFrame
+        add(musicWave);
+        revalidate();
+        repaint();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -493,12 +581,11 @@ public class MusicPlayerGUI extends JFrame {
         setVisible(true);
         getContentPane().setBackground(FRAME_COLOR);
 
-        // Lấy thông tin bài hát và cập nhật sóng âm
         MusicPlayer musicPlayer = getMusicPlayer();
         Song song = musicPlayer.getCurrentSong();
 
         String mp3FilePath = "src/assets/" + song.getSongTitle() + ".mp3";
-        musicWave.updateWaveData(mp3FilePath); // Bắt đầu visualization mới
+        musicWave.updateWaveData(mp3FilePath);
     }
 
 
@@ -568,9 +655,9 @@ public class MusicPlayerGUI extends JFrame {
             }
         });
 
-        if(!isPlaying){
+        if (!isPlaying) {
             timer.stop();
-        }else{
+        } else {
             timer.start();
         }
     }

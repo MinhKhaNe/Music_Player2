@@ -13,7 +13,7 @@ public class MusicWaveVisualizer extends JPanel {
     private Thread visualizationThread;
     private volatile boolean isRunning;
     private boolean isPlaying = true;
-    private String currentFilePath; // Lưu đường dẫn file hiện tại
+    private String currentFilePath;
 
 
     public MusicWaveVisualizer() {
@@ -68,7 +68,6 @@ public class MusicWaveVisualizer extends JPanel {
         if (!isRunning) {
             stopCurrentVisualization();
         }  else {
-            // Tiếp tục vẽ sóng âm thanh
             if (visualizationThread == null || !visualizationThread.isAlive()) {
                 playAndVisualize(currentFilePath);
             }
@@ -115,8 +114,6 @@ public class MusicWaveVisualizer extends JPanel {
         }
     }
 }
-
-
 
 
 
