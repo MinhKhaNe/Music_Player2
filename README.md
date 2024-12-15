@@ -3,8 +3,7 @@
 
 <!--Introduction-->
 <h2>Introduction</h2>
-<p>In this project, you'll learn how to build a MP3 Music Player App in Java! You can check out the full tutorial <a href="https://www.youtube.com/watch?v=xf0aH2K3oJ4">here</a>
-  , where I carefully go over the logic flow so that you can understand how this project is coded the way it was.
+<p>With Basic Music Player, you now have a basic application to listen to music without having to spend any money and still be able to enjoy music.</a>
 </p>
 
 <!--Technologies/Frameworks-->
@@ -19,17 +18,22 @@
 <!--Features-->
 <h2>Features</h2>
 <ul>
-  <li>🎶 Play an MP3 File (Song)</li>
-  <li>🎙 Display Title of Song</li>
-  <li>👤 Display Artist of Song</li>
-  <li>⏳ Display the Length of the Song</li>
-  <li>⏪ Playback Functionality</li>
-  <li>⏸ Pause Song</li>
-    <li>▶ Resume Song</li>
-  <li>⏭  Go to next Song in a playlist</li>
-  <li>⏮  Go to previous Song in a playlist</li>
-  <li>📃 Create a Custom Playlist</li>
-  <li>🔃 Load a Custom Playlist</li>
+  <li>Play an MP3 File (Song)</li>
+  <li>Display Title of Song</li>
+  <li>Display Artist of Song</li>
+  <li>Display the Length of the Song</li>
+  <li>Playback Functionality</li>
+  <li>Pause Song</li>
+    <li>Resume Song</li>
+  <li>Set timer</li>
+  <li>Replay Song</li>
+  <li>Display Music Wave of each Song</li>
+  <li>Create a list of your favorites</li>
+  <li>Display your favorites Song</li>
+  <li>Go to next Song in a playlist</li>
+  <li>Go to previous Song in a playlist</li>
+  <li>Create a Custom Playlist</li>
+  <li>Load a Custom Playlist</li>
 </ul>
 
 
