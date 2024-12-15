@@ -1,5 +1,5 @@
 <!--Project Name-->
-<h1>MP3 Music Player App</h1>
+<h1>Basic Music Player</h1>
 
 <!--Introduction-->
 <h2>Introduction</h2>
