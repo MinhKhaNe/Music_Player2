@@ -30,7 +30,6 @@ public class StartScreen extends JFrame {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Mở MusicPlayerGUI
                 new MusicPlayerGUI().setVisible(true);
                 dispose(); //
             }

@@ -17,13 +17,12 @@ public class MusicPlaylistDialog extends JDialog {
         this.musicPlayerGUI = musicPlayerGUI;
         songPaths = new ArrayList<>();
 
-        // configure dialog
         setTitle("Create Playlist");
         setSize(400, 400);
         setResizable(false);
         getContentPane().setBackground(MusicPlayerGUI.FRAME_COLOR);
         setLayout(null);
-        setModal(true); // this property makes it so that the dialog has to be closed to give focus
+        setModal(true);
         setLocationRelativeTo(musicPlayerGUI);
 
         addDialogComponents();
@@ -35,14 +34,12 @@ public class MusicPlaylistDialog extends JDialog {
         songContainer.setBounds((int)(getWidth() * 0.025), 10, (int)(getWidth() * 0.90), (int) (getHeight() * 0.75));
         add(songContainer);
 
-        // add song button
         JButton addSongButton = new JButton("Add");
         addSongButton.setBounds(60, (int) (getHeight() * 0.80), 100, 25);
         addSongButton.setFont(new Font("Dialog", Font.BOLD, 14));
         addSongButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // open file explorer
                 JFileChooser jFileChooser = new JFileChooser();
                 jFileChooser.setFileFilter(new FileNameExtensionFilter("MP3", "mp3"));
                 jFileChooser.setCurrentDirectory(new File("src/assets"));
@@ -54,20 +51,16 @@ public class MusicPlaylistDialog extends JDialog {
                     filePathLabel.setFont(new Font("Dialog", Font.BOLD, 12));
                     filePathLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-                    // add to the list
                     songPaths.add(filePathLabel.getText());
 
-                    // add to container
                     songContainer.add(filePathLabel);
 
-                    // refreshes dialog to show newly added JLabel
                     songContainer.revalidate();
                 }
             }
         });
         add(addSongButton);
 
-        // save playlist button
         JButton savePlaylistButton = new JButton("Save");
         savePlaylistButton.setBounds(215, (int) (getHeight() * 0.80), 100, 25);
         savePlaylistButton.setFont(new Font("Dialog", Font.BOLD, 14));
@@ -82,30 +75,22 @@ public class MusicPlaylistDialog extends JDialog {
                     if(result == JFileChooser.APPROVE_OPTION){
                         File selectedFile = jFileChooser.getSelectedFile();
 
-                        // convert to .txt file if not done so already
-                        // this will check to see if the file does not have the ".txt" file extension
                         if(!selectedFile.getName().substring(selectedFile.getName().length() - 4).equalsIgnoreCase(".txt")){
                             selectedFile = new File(selectedFile.getAbsoluteFile() + ".txt");
                         }
 
-                        // create the new file at the destinated directory
                         selectedFile.createNewFile();
 
-                        // now we will write all of the song paths into this file
                         FileWriter fileWriter = new FileWriter(selectedFile);
                         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
-                        // iterate through our song paths list and write each string into the file
-                        // each song will be written in their own row
                         for(String songPath : songPaths){
                             bufferedWriter.write(songPath + "\n");
                         }
                         bufferedWriter.close();
 
-                        // display success dialog
                         JOptionPane.showMessageDialog(MusicPlaylistDialog.this, "Successfully Created Playlist!");
 
-                        // close this dialog
                         MusicPlaylistDialog.this.dispose();
                     }
                 }catch(Exception exception){

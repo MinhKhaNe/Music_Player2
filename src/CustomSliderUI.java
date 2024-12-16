@@ -25,13 +25,11 @@ public class CustomSliderUI extends BasicSliderUI {
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // Vẽ đường track
         int trackHeight = 6;
         int cy = trackRect.y + (trackRect.height / 2) - (trackHeight / 2);
         g2.setColor(Color.WHITE);
         g2.fillRoundRect(trackRect.x, cy, trackRect.width, trackHeight, trackHeight, trackHeight);
 
-        // Đường đã phát (progress)
         int progressWidth = thumbRect.x + thumbRect.width / 2 - trackRect.x;
         g2.setColor(Color.BLUE);
         g2.fillRoundRect(trackRect.x, cy, progressWidth, trackHeight, trackHeight, trackHeight);

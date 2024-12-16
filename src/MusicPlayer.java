@@ -39,7 +39,6 @@ public class MusicPlayer extends PlaybackListener {
         currentTimeInMilli = timeInMilli;
     }
 
-    // constructor
     public MusicPlayer(MusicPlayerGUI musicPlayerGUI){
         this.musicPlayerGUI = musicPlayerGUI;
     }
@@ -48,19 +47,13 @@ public class MusicPlayer extends PlaybackListener {
         currentSong = song;
         playlist = null;
 
-        // stop the song if possible
         if(!songFinished)
             stopSong();
 
-        // play the current song if not null
         if(currentSong != null){
-            // reset frame
             currentFrame = 0;
-
-            // reset current time in milli
             currentTimeInMilli = 0;
 
-            // update gui
             musicPlayerGUI.setPlaybackSliderValue(0);
 
             playCurrentSong();
@@ -73,8 +66,6 @@ public class MusicPlayer extends PlaybackListener {
         try{
             FileReader fileReader = new FileReader(playlistFile);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-            // reach each line from the text file and store the text into the songPath variable
             String songPath;
             while((songPath = bufferedReader.readLine()) != null){
                 Song song = new Song(songPath);
@@ -107,10 +98,6 @@ public class MusicPlayer extends PlaybackListener {
     }
 
 
-    public void timer(){
-
-    }
-
     public void pauseSong(){
         if(advancedPlayer != null){
             isPaused = true;
@@ -129,29 +116,21 @@ public class MusicPlayer extends PlaybackListener {
 
     public void nextSong(){
         if(playlist == null) return;
-
-        // check to see if we have reached the end of the playlist, if so then don't do anything
         if(currentPlaylistIndex + 1 > playlist.size() - 1) return;
 
         pressedNext = true;
 
-        // stop the song if possible
         if(!songFinished)
             stopSong();
 
-        // increase current playlist index
         currentPlaylistIndex++;
 
-        // update current song
         currentSong = playlist.get(currentPlaylistIndex);
 
-        // reset frame
         currentFrame = 0;
 
-        // reset current time in milli
         currentTimeInMilli = 0;
 
-        // update gui
         musicPlayerGUI.enablePauseButtonDisablePlayButton();
         musicPlayerGUI.updateSongTitleAndArtist(currentSong);
         musicPlayerGUI.updatePlaybackSlider(currentSong);
@@ -161,37 +140,27 @@ public class MusicPlayer extends PlaybackListener {
     }
 
     public void prevSong(){
-        // no need to go to the next song if there is no playlist
         if(playlist == null) return;
 
-        // check to see if we can go to the previous song
         if(currentPlaylistIndex - 1 < 0) return;
 
         pressedPrev = true;
 
-        // stop the song if possible
         if(!songFinished)
             stopSong();
 
-        // decrease current playlist index
         currentPlaylistIndex--;
 
-        // update current song
         currentSong = playlist.get(currentPlaylistIndex);
 
-        // reset frame
         currentFrame = 0;
-
-        // reset current time in milli
         currentTimeInMilli = 0;
 
-        // update gui
         musicPlayerGUI.enablePauseButtonDisablePlayButton();
         musicPlayerGUI.updateSongTitleAndArtist(currentSong);
         musicPlayerGUI.updatePlaybackSlider(currentSong);
         musicPlayerGUI.updateSongImage(currentSong);
 
-        // play the song
         playCurrentSong();
     }
 
@@ -199,18 +168,13 @@ public class MusicPlayer extends PlaybackListener {
         if(currentSong == null) return;
 
         try{
-            // read mp3 audio data
             FileInputStream fileInputStream = new FileInputStream(currentSong.getFilePath());
             BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
 
-            // create a new advanced player
             advancedPlayer = new AdvancedPlayer(bufferedInputStream);
             advancedPlayer.setPlayBackListener(this);
 
-            // start music
             startMusicThread();
-
-            // start playback slider thread
             startPlaybackSliderThread();
 
         }catch(Exception e){
@@ -218,7 +182,6 @@ public class MusicPlayer extends PlaybackListener {
         }
     }
 
-    // create a thread that will handle playing the music
     private void startMusicThread(){
         new Thread(new Runnable() {
             @Override
@@ -226,17 +189,13 @@ public class MusicPlayer extends PlaybackListener {
                 try{
                     if(isPaused){
                         synchronized(playSignal){
-                            // update flag
-                            isPaused = false;
 
-                            // notify the other thread to continue (makes sure that isPaused is updated to false properly)
+                            isPaused = false;
                             playSignal.notify();
                         }
 
-                        // resume music from last frame
                         advancedPlayer.play(currentFrame, Integer.MAX_VALUE);
                     }else{
-                        // play music from the beginning
                         advancedPlayer.play();
                     }
                 }catch(Exception e){
@@ -246,15 +205,12 @@ public class MusicPlayer extends PlaybackListener {
         }).start();
     }
 
-    // create a thread that will handle updating the slider
     private void startPlaybackSliderThread(){
         new Thread(new Runnable() {
             @Override
             public void run() {
                 if(isPaused){
                     try{
-                        // wait till it gets notified by other thread to continue
-                        // makes sure that isPaused boolean flag updates to false before continuing
                         synchronized(playSignal){
                             playSignal.wait();
                         }
@@ -265,16 +221,11 @@ public class MusicPlayer extends PlaybackListener {
 
                 while(!isPaused && !songFinished && !pressedNext && !pressedPrev){
                     try{
-                        // increment current time milli
                         currentTimeInMilli++;
 
-                        // calculate into frame value
                         int calculatedFrame = (int) ((double) currentTimeInMilli * 2.08 * currentSong.getFrameRatePerMilliseconds());
-
-                        // update gui
                         musicPlayerGUI.setPlaybackSliderValue(calculatedFrame);
 
-                        // mimic 1 millisecond using thread.sleep
                         Thread.sleep(1);
                     }catch(Exception e){
                         e.printStackTrace();
@@ -286,7 +237,6 @@ public class MusicPlayer extends PlaybackListener {
 
     @Override
     public void playbackStarted(PlaybackEvent evt) {
-        // this method gets called in the beginning of the song
         System.out.println("Playback Started");
         songFinished = false;
         pressedNext = false;
@@ -300,10 +250,8 @@ public class MusicPlayer extends PlaybackListener {
         if(isPaused){
             currentFrame += (int) ((double) evt.getFrame() * currentSong.getFrameRatePerMilliseconds());
         }else{
-            // if the user pressed next or prev we don't need to execute the rest of the code
             if(pressedNext || pressedPrev) return;
 
-            // when the song ends
             songFinished = true;
             if(isReplayEnabled){
                 playCurrentSong();
@@ -313,12 +261,9 @@ public class MusicPlayer extends PlaybackListener {
             }else if(playlist == null){
                 musicPlayerGUI.enablePlayButtonDisablePauseButton();
             }else{
-                // last song in the playlist
                 if(currentPlaylistIndex == playlist.size() - 1){
-                    // update gui
                     musicPlayerGUI.enablePlayButtonDisablePauseButton();
                 }else{
-                    // go to the next song in the playlist
                     nextSong();
                 }
             }
