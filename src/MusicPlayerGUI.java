@@ -65,14 +65,14 @@ public class MusicPlayerGUI extends JFrame {
         add(songImage);
 
         songTitle = new JLabel("Song title");
-        songTitle.setBounds(80, 285, getWidth() - 100, 30); // Giảm chiều rộng để nhường chỗ cho nút
+        songTitle.setBounds(80, 285, getWidth() - 100, 30);
         songTitle.setFont(new Font("Dialog", Font.BOLD, 17));
         songTitle.setForeground(TEXT_COLOR);
         songTitle.setHorizontalAlignment(SwingConstants.LEFT);
         add(songTitle);
 
         songArtist = new JLabel("Singer name");
-        songArtist.setBounds(80, 305, getWidth() - 100, 30); // Cùng chỉnh chiều rộng như trên
+        songArtist.setBounds(80, 305, getWidth() - 100, 30);
         songArtist.setFont(new Font("Dialog", Font.PLAIN, 12));
         songArtist.setForeground(TEXT_COLOR);
         songArtist.setHorizontalAlignment(SwingConstants.LEFT);
@@ -80,7 +80,7 @@ public class MusicPlayerGUI extends JFrame {
 
         File favoriteFile = new File("src/assets/Favorite.txt");
         favoriteButton = new JButton(loadImage("src/image/heart.png"));
-        favoriteButton.setBounds(getWidth() - 100, 285, 50, 50); // Vị trí bên phải songTitle và songArtist
+        favoriteButton.setBounds(getWidth() - 100, 285, 50, 50);
         favoriteButton.setBorderPainted(false);
         favoriteButton.setBackground(null);
         favoriteButton.addActionListener(new ActionListener() {
@@ -104,8 +104,6 @@ public class MusicPlayerGUI extends JFrame {
         });
         add(favoriteButton);
 
-
-        // playback slider
         playbackSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0);
         playbackSlider.setUI(new CustomSliderUI(playbackSlider));
         playbackSlider.setBounds(getWidth()/2 - 300/2, 335, 300, 40);
@@ -113,36 +111,21 @@ public class MusicPlayerGUI extends JFrame {
         playbackSlider.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                // when the user is holding the tick we want to the pause the song
                 musicPlayer.pauseSong();
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                // when the user drops the tick
                 JSlider source = (JSlider) e.getSource();
-
-                // get the frame value from where the user wants to playback to
                 int frame = source.getValue();
-
-                // update the current frame in the music player to this frame
                 musicPlayer.setCurrentFrame(frame);
-
-                // update current time in milli as well
                 musicPlayer.setCurrentTimeInMilli((int) (frame / (2.08 * musicPlayer.getCurrentSong().getFrameRatePerMilliseconds())));
-
-                // resume the song
                 musicPlayer.playCurrentSong();
-
-                // toggle on pause button and toggle off play button
                 enablePauseButtonDisablePlayButton();
             }
         });
         add(playbackSlider);
-
-        // playback buttons (i.e. previous, play, next)
         addPlaybackBtns();
-
     }
 
     private void addSongToFavorites(File file, String songInfo) throws IOException {
@@ -173,6 +156,7 @@ public class MusicPlayerGUI extends JFrame {
                 }
             }
         }
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             for (String line : remainingLines) {
                 writer.write(line);
@@ -184,7 +168,6 @@ public class MusicPlayerGUI extends JFrame {
     private void addToolbar(){
         JToolBar toolBar = new JToolBar();
         toolBar.setBounds(0, 0, getWidth(), 20);
-
         toolBar.setFloatable(false);
 
         JMenuBar menuBar = new JMenuBar();
@@ -542,13 +525,11 @@ public class MusicPlayerGUI extends JFrame {
         musicWave.updateWaveData(mp3FilePath);
     }
 
-
     public void updateReplayImage() {
         if (replayImage) {
             replayButton.setIcon(loadImage("src/image/replay1.png"));
         } else {
             replayButton.setIcon(loadImage("src/image/replay.png"));
-
         }
     }
 
@@ -637,12 +618,10 @@ public class MusicPlayerGUI extends JFrame {
     private ImageIcon loadImage(String imagePath){
         try{
             BufferedImage image = ImageIO.read(new File(imagePath));
-
             return new ImageIcon(image);
         }catch(Exception e){
             e.printStackTrace();
         }
-
         return null;
     }
 }
