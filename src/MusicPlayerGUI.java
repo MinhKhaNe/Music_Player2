@@ -24,14 +24,12 @@ public class MusicPlayerGUI extends JFrame {
     private Timer timer;
     private boolean timerFinished;
     private JFileChooser jFileChooser;
-
     private JLabel songTitle, songArtist, songImage;
     private JPanel playbackBtns;
     private JSlider playbackSlider;
     private JButton replayButton;
     private JButton favoriteButton;
     private JButton timerButton;
-
     private MusicWaveVisualizer musicWave;
 
 
@@ -504,7 +502,7 @@ public class MusicPlayerGUI extends JFrame {
         }
 
         musicWave = new MusicWaveVisualizer();
-        musicWave.setBounds(0, 450, 400, 100); // Đặt y = 450
+        musicWave.setBounds(0, 450, 400, 100); 
 
         setLayout(null);
         add(musicWave);
